@@ -1,0 +1,11 @@
+[uwsgi]
+socket = <%= @socket %>
+logto = <%= @logto %>
+home = <%= @home %>
+pythonpath = <%= @pythonpath %>
+wsgi-file = <%= @wsgi_file %>
+callable = <%= @callable %>
+max-requests = <%= @max_requests %>
+master = <%= @master %>
+processes = <%= @processes %>
+chmod = 666

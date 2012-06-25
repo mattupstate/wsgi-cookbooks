@@ -1,0 +1,18 @@
+server {
+    listen       <%= @listen %>;
+    server_name  <%= @server_name %>;
+    
+    access_log  <%= @access_log %>;
+    error_log <%= @error_log %>;
+    
+    location / {
+        include uwsgi_params;
+        uwsgi_pass unix:<%= @socket %>;
+    }
+    
+    location /static {
+        alias <%= @static_folder %>;
+        expires 1y;
+        add_header Cache-Control "public";
+    }
+}
