@@ -21,7 +21,7 @@ You can quickly deploy your WSGI application to a local, virtual Ubuntu server b
 
 Path:
 
-    `cookbooks/my_wsgi_app/recipes/default.rb`
+    cookbooks/my_wsgi_app/recipes/default.rb
 
 Contents:
 
