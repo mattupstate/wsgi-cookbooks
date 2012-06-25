@@ -15,6 +15,7 @@ In addition to the standard Chef deploy resource this setup does the following:
 3. Creates a folder named `run` to hold the uWSGI socket file.
 4. Installs dependencies into a virtualenv if a file named `requirements.txt` exists in your application's root folder.
 
+
 ## Using with Vagrant
 
 You can quickly deploy your WSGI application to a local, virtual Ubuntu server by setting up a quick recipe for your application. For instance, you would create the following file relative to your project:
@@ -25,42 +26,46 @@ Path:
 
 Contents:
 
-    application "my_wsgi_app" do
-      path "/srv/my_wsgi_app"
-      owner "nobody"
-      group "nogroup"
-      repository "https://github.com/path/to-your-app.git"
-      revision "master"
+```ruby
+application "my_wsgi_app" do
+  path "/srv/my_wsgi_app"
+  owner "nobody"
+  group "nogroup"
+  repository "https://github.com/path/to-your-app.git"
+  revision "master"
 
-      uwsgi do
-        wsgi_file "wsgi.py"
-        callable "application"
-      end
-    end
+  uwsgi do
+    wsgi_file "wsgi.py"
+    callable "application"
+  end
+end
+```
 
 If necessary, modify the values for `repository`, `wsgi_file`, and `callable` to match that of your project.
 
 Then edit your `Vagrantfile` to look like the following:
 
-    Vagrant::Config.run do |config|
-      config.vm.define :wsgivm do |wsgi_config|
-        wsgi_config.vm.box = "lucid64"
-        wsgi_config.vm.box_url = "http://files.vagrantup.com/lucid64.box"
-        wsgi_config.vm.forward_port 80, 8080
-        wsgi_config.vm.provision :chef_solo do |chef|
-          chef.cookbooks_path = "cookbooks"
-          chef.add_recipe "apt"
-          chef.add_recipe "build-essential"
-          chef.add_recipe "runit"
-          chef.add_recipe "nginx"
-          chef.add_recipe "git"
-          chef.add_recipe "python"
-          chef.add_recipe "supervisor"
-          chef.add_recipe "uwsgi"
-          chef.add_recipe "my_wsgi_app"
-        end
-      end
+```ruby
+Vagrant::Config.run do |config|
+  config.vm.define :wsgivm do |wsgi_config|
+    wsgi_config.vm.box = "lucid64"
+    wsgi_config.vm.box_url = "http://files.vagrantup.com/lucid64.box"
+    wsgi_config.vm.forward_port 80, 8080
+    wsgi_config.vm.provision :chef_solo do |chef|
+      chef.cookbooks_path = "cookbooks"
+      chef.add_recipe "apt"
+      chef.add_recipe "build-essential"
+      chef.add_recipe "runit"
+      chef.add_recipe "nginx"
+      chef.add_recipe "git"
+      chef.add_recipe "python"
+      chef.add_recipe "supervisor"
+      chef.add_recipe "uwsgi"
+      chef.add_recipe "my_wsgi_app"
     end
+  end
+end
+```
 
 Then from the command line you can run:
 
